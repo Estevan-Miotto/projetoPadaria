@@ -1,7 +1,10 @@
 from recursos import limpar_terminal, ler_texto_obrigatorio, cliente, menu, listar_produtos, cadastrar_cliente, listar_clientes, listar_produtos
 
-clientes = []
-pedidos = []
+from estoque import Estoque
+
+estoque = Estoque()
+
+estoque.listar_produtos()
 
 
 while True:
