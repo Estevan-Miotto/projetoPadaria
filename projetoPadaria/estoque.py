@@ -1,4 +1,4 @@
-from produtos import produtos_iniciais
+from projetoPadaria.produtos import produtos_iniciais
 
 
 class Estoque:
@@ -24,15 +24,3 @@ class Estoque:
         for nome, quantidade in self.produtos.items():
             print(f"{nome}: {quantidade}")
 
-
-'''
-ovo = 100
-pao = 50
-leite = 20
-farinha = 30
-acucar = 40
-cafe = 15
-manteiga = 25
-queijo = 30
-presunto = 20
-...'''

@@ -7,22 +7,6 @@ def ler_texto_obrigatorio(mensagem):
             return texto
         print("Este campo é obrigatório.")
 
-def listar_clientes(clientes):
-    for cliente in clientes:
-        print(cliente)
-
-def listar_produtos():
-    # Aqui você pode adicionar a lógica para listar pedidos cadastrados
-    return []
-
-def cadastrar_cliente(nome, ID):
-    cliente = {
-        'nome': nome,
-        'ID': ID,
-    }
-    # Aqui você pode adicionar a lógica para salvar o cliente em um banco de dados ou arquivo
-    return cliente
-
 def menu():
     print("=== Sistema de Padaria ===")
     print("1. Cadastrar Cliente")
@@ -44,11 +28,4 @@ def cadastrar_pedido(produto, quantidade):
 
 def listar_pedidos():
     return []
-
-def cliente(nome, ID):
-    return {
-        'nome': nome,
-        'ID': ID,
-    }
-
 
