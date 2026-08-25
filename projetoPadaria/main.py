@@ -12,7 +12,7 @@ while True:
     if opcao == '1': #Cadastrar cliente
         nome = ler_texto_obrigatorio("Digite o nome do cliente: ")  
         clientes.cadastrar(nome)
-        print(f"Cliente cadastrado com sucesso: "f"{nome}")
+        print(f"Cliente cadastrado com sucesso: {nome}")
 
     elif opcao == '2': #Listar clientes
         print("Clientes cadastrados:")
@@ -27,7 +27,7 @@ while True:
             print("Cliente não encontrado.")
 
     elif opcao == '4': #Remover cliente
-        codigo = int(ler_texto_obrigatorio("Digite o código do cliente: "))
+        codigo = int(ler_texto_obrigatorio("Digite o código do cliente para remover: "))
         clientes.remover_cliente(codigo)
         print("Cliente removido com sucesso.")
 
@@ -117,6 +117,7 @@ while True:
             print("Nenhum produto vendido ainda.")
 
     elif opcao == '21':  #Desfazer ultima operacao
+        pass
 
     elif opcao == '0': #Sair
         print("Saindo do programa...")
