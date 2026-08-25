@@ -1,6 +1,5 @@
 from projetoPadaria.produtos import produtos_iniciais
 
-
 class Estoque:
     def __init__(self):
         self.produtos = produtos_iniciais.copy()
@@ -23,4 +22,3 @@ class Estoque:
     def listar_produtos(self):
         for nome, quantidade in self.produtos.items():
             print(f"{nome}: {quantidade}")
-
