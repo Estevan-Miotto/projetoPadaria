@@ -93,7 +93,34 @@ while True:
         vendas = estoque.listar_vendas()
         for venda in vendas:
             print(f"Cliente: {venda['cliente'].nome} | Produto: {venda['produto'].nome} | Quantidade: {venda['quantidade']}")
-    
+
+    elif opcao == '15': #Cadastrar pedido
+            cadastrar_pedido(clientes, estoque)
+
+    elif opcao == '16': #Listar pedidos
+        listar_pedidos(clientes)
+
+    elif opcao == '17': #Listar clientes com pedidos
+        listar_clientes(clientes)
+
+    elif opcao == '18': #Buscar cliente com pedidos
+        buscar_cliente(clientes)
+
+    elif opcao == '19': #Remover cliente com pedidos
+        remover_cliente(clientes)
+
+    elif opcao == '20': #Exibit produto mais vendido
+        produto_mais_vendido = estoque.produto_mais_vendido()
+        if produto_mais_vendido:
+            print(f"Produto mais vendido: {produto_mais_vendido.nome} - Quantidade vendida: {produto_mais_vendido.quantidade_vendida}")
+        else:
+            print("Nenhum produto vendido ainda.")
+
+    elif opcao == '21':  #Desfazer ultima operacao
+
+    elif opcao == '0': #Sair
+        print("Saindo do programa...")
+        break
 
     else:
         print("Opção inválida. Tente novamente.")
