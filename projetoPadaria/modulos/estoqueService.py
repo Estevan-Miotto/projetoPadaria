@@ -1,8 +1,11 @@
 import os
+from clientes import Cliente
+from projeto_exemplo.models import Cliente
 
 from estruturas.fila import Fila
 from estruturas.lde import LDE
 from estruturas.lse import LSE
+from modulos import Cliente
 from services.persistencia_service import PersistenciaService
 
 class EstoqueService:
@@ -48,16 +51,20 @@ class EstoqueService:
         return maior_codigo + 1
 
     def cadastrar_cliente(self, nome):
-        pass
+        cliente = Cliente(self.proximo_id, nome)
+        self.clientes[self.proximo_id] = cliente
+        self.proximo_id += 1
 
     def listar_clientes(self):
-        pass
+        for cliente in self.clientes.values():
+            print(f"ID: {cliente.id} | "f"Nome: {cliente.nome}")
 
     def buscar_cliente(self, codigo):
-        pass
+        return self.clientes.get(codigo)
 
     def remover_cliente(self, codigo):
-        pass
+        if codigo in self.clientes:
+                    del self.clientes[codigo]
 
     def cadastrar_produto(self, nome, preco, quantidade):
         pass

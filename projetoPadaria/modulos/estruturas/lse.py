@@ -1,4 +1,4 @@
-from estruturas.nodo import Nodo
+from projetoPadaria.modulos.estruturas.nodo import Nodo
 
 class LSE:
     def __init__(self):

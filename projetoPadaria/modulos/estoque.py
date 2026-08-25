@@ -1,8 +1,9 @@
-from projetoPadaria.produtos import produtos_iniciais
+from modulos import clientes
+from modulos import produtos
 
 class Estoque:
     def __init__(self):
-        self.produtos = produtos_iniciais.copy()
+        self.produtos = produtos.produtos_iniciais.copy()
 
     def adicionar_produto(self, nome, quantidade):
         if nome in self.produtos:

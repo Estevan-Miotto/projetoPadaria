@@ -1,4 +1,4 @@
-from services.estoque_service import EstoqueService
+from projetoPadaria.modulos.services.estoque_service import EstoqueService
 
 def ler_inteiro(mensagem):
     valor = input(mensagem)

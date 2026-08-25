@@ -1,12 +1,9 @@
 import os
-from Cliente import Cliente
-from projetoPadaria.projeto_exemplo.models import cliente
 
-from estruturas.fila import Fila
-from estruturas.lde import LDE
-from estruturas.lse import LSE
-from projetoPadaria.projeto_exemplo.models.cliente import Cliente
-from services.persistencia_service import PersistenciaService
+from projetoPadaria.modulos.estruturas.fila import Fila
+from projetoPadaria.modulos.estruturas.lde import LDE
+from projetoPadaria.modulos.estruturas.lse import LSE
+from projetoPadaria.modulos.services.persistencia_service import PersistenciaService
 
 class EstoqueService:
     def __init__(self):
@@ -51,20 +48,16 @@ class EstoqueService:
         return maior_codigo + 1
 
     def cadastrar_cliente(self, nome):
-        cliente = Cliente(self.proximo_id, nome)
-        self.clientes[self.proximo_id] = cliente
-        self.proximo_id += 1
+        pass
 
     def listar_clientes(self):
-        for cliente in self.clientes.values():
-            print(f"ID: {cliente.id} | "f"Nome: {cliente.nome}")
+        pass
 
     def buscar_cliente(self, codigo):
-        return self.clientes.get(codigo)
+        pass
 
     def remover_cliente(self, codigo):
-        if codigo in self.clientes:
-                    del self.clientes[codigo]
+        pass
 
     def cadastrar_produto(self, nome, preco, quantidade):
         pass

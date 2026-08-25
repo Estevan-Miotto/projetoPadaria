@@ -1,4 +1,4 @@
-from estruturas.dnodo import DNodo
+from projetoPadaria.modulos.estruturas.dnodo import DNodo
 
 class LDE:
     def __init__(self):

@@ -1,4 +1,4 @@
-import os,produtos
+import os
 
 def ler_texto_obrigatorio(mensagem):
     while True:
