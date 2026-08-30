@@ -38,4 +38,4 @@ class Estoque:
           self.produtos[nome] = quantidade
           print(f"Estoque de {nome} atualizado para {quantidade}.")
         else:
-          print("Produto não encontrado.")
+          print("Produto não localizado")
