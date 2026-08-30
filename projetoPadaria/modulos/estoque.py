@@ -23,3 +23,19 @@ class Estoque:
     def listar_produtos(self):
         for nome, quantidade in self.produtos.items():
             print(f"{nome}: {quantidade}")
+
+    def buscar_produto(self, nome):
+        if nome in self.produtos:
+          print(f"Produto: {nome}")
+          print(f"Quantidade em estoque: {self.produtos[nome]}")
+          return self.produtos[nome]
+        else:
+         print("Produto não encontrado.")
+         return None
+
+    def atualizar_estoque(self, nome, quantidade):
+        if nome in self.produtos:
+          self.produtos[nome] = quantidade
+          print(f"Estoque de {nome} atualizado para {quantidade}.")
+        else:
+          print("Produto não encontrado.")
