@@ -73,17 +73,30 @@ def executar_opcao(opcao, service):
         pass
 
     elif opcao == 9:
-        pass
+        nome = ler_texto_obrigatorio("Digite o nome do produto para remover: ")
+        estoque.remover_produto_completo(nome)
 
     elif opcao == 10:
-        pass
+         print("Produtos em ordem inversa:")
+         produtos_inverso = estoque.listar_produtos_inverso()
+         for nome, quantidade in produtos_inverso:
+            print(f"Nome: {nome} | Quantidade: {quantidade}")
 
     elif opcao == 11:
-        pass
+        print("Produtos ordenados por nome:")
+        produtos_ordenados = estoque.listar_produtos_ordenados()
+        for nome, quantidade in produtos_ordenados:
+            print(f"Nome: {nome} | Quantidade: {quantidade}")
 
     elif opcao == 12:
-        pass
-
+        nome = ler_texto_obrigatorio("Digite o nome do produto: ")
+        resultado = estoque.buscar_produto_binario(nome)
+        if resultado:
+            nome_encontrado, quantidade_encontrada = resultado
+            print(f"Produto encontrado: {nome_encontrado} - Quantidade: {quantidade_encontrada}")
+        else:
+            print("Produto não encontrado.")
+  
     elif opcao == 13:
         pass
 
