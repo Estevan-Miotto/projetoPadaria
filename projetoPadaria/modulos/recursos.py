@@ -48,9 +48,3 @@ def listar_clientes(self):
     for cliente in self.clientes.values():
         print(f"ID: {cliente.id} | "f"Nome: {cliente.nome}")
 
-def buscar_cliente(self, codigo):
-    pass
-
-def remover_cliente(self, codigo):
-    pass
-
