@@ -1,9 +1,11 @@
 from modulos.recursos import (limpar_terminal,ler_texto_obrigatorio,mostrar_menu,cadastrar_pedido,listar_pedidos,listar_clientes,buscar_cliente,remover_cliente)
 from modulos.estoque import Estoque
 from modulos.clientes import Clientes
+from estruturas.pilha import Pilha
 
 estoque = Estoque()
 clientes = Clientes()
+pilha = Pilha()
 
 while True:
     limpar_terminal()
@@ -116,8 +118,38 @@ while True:
         else:
             print("Nenhum produto vendido ainda.")
 
-    elif opcao == '21':  #Desfazer ultima operacao
-        pass
+    elif opcao == '21':  # Desfazer ultima operacao
+        operacao = historico.desempilhar()
+        if operacao is None:
+            print("Não há operações para desfazer.")
+        else:
+            tipo = operacao["tipo"]
+
+            if tipo == "cadastro_cliente":
+                clientes.remover_cliente(operacao["id"])
+                print(f"Cadastro do cliente ID {operacao['id']} desfeito.")
+
+            elif tipo == "remocao_cliente":
+                clientes.reinserir(operacao["id"], operacao["nome"])
+                print(f"Remoção do cliente '{operacao['nome']}' desfeita.")
+
+            elif tipo == "cadastro_produto":
+                if operacao["quantidade_anterior"] is None:
+                    if operacao["nome"] in estoque.produtos:
+                        del estoque.produtos[operacao["nome"]]
+                else:
+                    estoque.produtos[operacao["nome"]] = operacao["quantidade_anterior"]
+                print(f"Cadastro do produto '{operacao['nome']}' desfeito.")
+
+            elif tipo == "atualizacao_estoque":
+                estoque.produtos[operacao["nome"]] = operacao["quantidade_anterior"]
+                print(f"Atualização de estoque de '{operacao['nome']}' desfeita.")
+
+            elif tipo == "remocao_produto":
+                estoque.produtos[operacao["nome"]] = operacao["quantidade"]
+                print(f"Remoção do produto '{operacao['nome']}' desfeita.")
+            
+           # elif tipo == "venda":
 
     elif opcao == '0': #Sair
         print("Saindo do programa...")
