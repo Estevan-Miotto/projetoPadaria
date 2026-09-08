@@ -33,7 +33,8 @@ def mostrar_menu():
     print("20 - Exibir produto mais vendido")
     print("21 - Desfazer ultima operacao")
     print("0 - Sair")
-    return input("Escolha uma opção: ")
+    return input("Escolha uma opção: ") 
+
 
 def limpar_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -47,4 +48,16 @@ def listar_pedidos():
 def listar_clientes(self):
     for cliente in self.clientes.values():
         print(f"ID: {cliente.id} | "f"Nome: {cliente.nome}")
+
+def ler_inteiro(mensagem):
+    valor = input(mensagem)
+    return int(valor)
+
+def ler_float(mensagem):
+    valor = input(mensagem). replace(","".")
+    return float(valor)  
+def pausar():
+    input("\nPressione ENTER para continuar!")
+
+
 

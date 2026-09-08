@@ -107,10 +107,32 @@ class EstoqueService:
         return total
 
     def clientes_e_valores_totais_gastos(self):
-        pass
+        totais_por_cliente = {}
+
+        for venda in self.vendas.listar():
+            codigo = venda.codigo_cliente
+            totais_por_cliente[codigo] = totais_por_cliente.get(codigo, 0.0) + venda.valor_total
+
+        resultado = []
+        for codigo_cliente, total_gasto in totais_por_cliente.items():
+            cliente = self.clientes.buscar(codigo_cliente)
+            nome = cliente.nome if cliente else f"Cliente {codigo_cliente} (nao encontrado)"
+            resultado.append({"codigo": codigo_cliente, "nome": nome, "total_gasto": total_gasto})
+
+        return resultado
 
     def cliente_que_mais_gastou(self):
-        pass
+        totais = self.clientes_e_valores_totais_gastos()
+
+        if len(totais) == 0:
+            return None
+
+        maior = totais[0]
+        for item in totais[1:]:
+            if item["total_gasto"] > maior["total_gasto"]:
+                maior = item
+
+        return maior
 
     def produto_mais_vendido(self):
         pass

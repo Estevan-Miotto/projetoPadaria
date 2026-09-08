@@ -110,11 +110,23 @@ while True:
         total = service.valor_total_vendas()
         print(f"Valor total das vendas: R$ {total:.2f}")
 
-    elif opcao == '18': #Buscar cliente com pedidos
-        buscar_cliente(clientes)
+    elif opcao == '18': #cliente com valor gasto 
+        print("Clientes e valores totais gastos:")
+        totais = service.clientes_e_valores_totais_gastos()
 
-    elif opcao == '19': #Remover cliente com pedidos
-        remover_cliente(clientes)
+        if len(totais) == 0:
+            print("Nenhuma venda registrada!!")
+
+        else: 
+            for item in totais:
+                print(f"Cliente:{item['nome']} | Total gasto: R${item[' total_gasto']:.2f}")
+
+    elif opcao == '19': #cliente que mais gastou 
+        maior = service.cliente_que_mais_gastou()
+        if maior is None: 
+            print(" Nenhuma venda registrada ainda. ")
+        else:
+            print(f"Cliente que mais gastou: {maior['nome']} - total: R${maior['total_gasto']:.2f}")
 
     elif opcao == '20': #Exibit produto mais vendido
         produto_mais_vendido = estoque.produto_mais_vendido()
