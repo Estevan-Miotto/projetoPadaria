@@ -1,9 +1,9 @@
 import os
 
-from projetoPadaria.modulos.estruturas.fila import Fila
-from projetoPadaria.modulos.estruturas.lde import LDE
-from projetoPadaria.modulos.estruturas.lse import LSE
-from projetoPadaria.modulos.services.persistencia_service import PersistenciaService
+from modulos.estruturas.fila import Fila
+from modulos.estruturas.lde import LDE
+from modulos.estruturas.lse import LSE
+from modulos.services.persistencia_service import PersistenciaService
 
 class EstoqueService:
     def __init__(self):
@@ -90,10 +90,15 @@ class EstoqueService:
         pass
 
     def primeira_venda(self):
-        pass
+        if self.vendas.is_empty():
+            return None
+        return self.vendas.front()
 
     def valor_total_estoque(self):
-        pass
+        total = 0.0
+        for produto in self.produtos.listar():
+            total += produto.preco * produto.quantidade
+        return total
 
     def valor_total_vendas(self):
         pass

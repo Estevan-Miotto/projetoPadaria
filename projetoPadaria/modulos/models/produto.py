@@ -21,7 +21,8 @@ class Produto:
         return self.codigo
 
     def atualizar_estoque(self, nova_quantidade):
-        pass
+        self.quantidade = nova_quantidade
+
 
     def to_csv_row(self):
         return [self.codigo, self.nome, self.preco, self.quantidade]

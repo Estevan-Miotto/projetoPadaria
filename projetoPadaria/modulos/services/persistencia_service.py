@@ -1,9 +1,9 @@
 import csv
 import os
 
-from models.cliente import cliente_from_csv_row
-from models.produto import produto_from_csv_row
-from models.venda import venda_from_csv_row
+from modulos.models.cliente import cliente_from_csv_row
+from modulos.models.produto import produto_from_csv_row
+from modulos.models.venda import venda_from_csv_row
 
 class PersistenciaService:
     def __init__(self, pasta_data):

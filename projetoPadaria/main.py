@@ -1,11 +1,10 @@
-from modulos.recursos import (limpar_terminal,ler_texto_obrigatorio,mostrar_menu,cadastrar_pedido,listar_pedidos,listar_clientes,buscar_cliente,remover_cliente)
-from modulos.estoque import Estoque
-from modulos.clientes import Clientes
-from estruturas.pilha import Pilha
-
-estoque = Estoque()
-clientes = Clientes()
-pilha = Pilha()
+from modulos.services.estoque_service import EstoqueService
+from modulos.recursos import (
+    limpar_terminal,
+    ler_texto_obrigatorio,
+    mostrar_menu,
+)
+service = EstoqueService()
 
 while True:
     limpar_terminal()
@@ -97,10 +96,15 @@ while True:
             print(f"Cliente: {venda['cliente'].nome} | Produto: {venda['produto'].nome} | Quantidade: {venda['quantidade']}")
 
     elif opcao == '15': #Cadastrar pedido
-            cadastrar_pedido(clientes, estoque)
+        venda = service.primeira_venda()
+        if venda:
+            print(venda)
+        else:
+            print("Não há vendas na fila.")
 
     elif opcao == '16': #Listar pedidos
-        listar_pedidos(clientes)
+        total = service.valor_total_estoque()
+        print(f"Valor total do estoque: R$ {total:.2f}")
 
     elif opcao == '17': #Listar clientes com pedidos
         listar_clientes(clientes)
