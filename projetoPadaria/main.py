@@ -106,8 +106,9 @@ while True:
         total = service.valor_total_estoque()
         print(f"Valor total do estoque: R$ {total:.2f}")
 
-    elif opcao == '17': #Listar clientes com pedidos
-        listar_clientes(clientes)
+    elif opcao == '17': #Exibir valor total das vendas
+        total = service.valor_total_vendas()
+        print(f"Valor total das vendas: R$ {total:.2f}")
 
     elif opcao == '18': #Buscar cliente com pedidos
         buscar_cliente(clientes)
