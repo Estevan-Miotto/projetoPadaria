@@ -4,6 +4,7 @@ from modulos.estruturas.fila import Fila
 from modulos.estruturas.lde import LDE
 from modulos.estruturas.lse import LSE
 from modulos.services.persistencia_service import PersistenciaService
+from modulos.models.cliente import Cliente
 
 class EstoqueService:
     def __init__(self):
@@ -48,17 +49,25 @@ class EstoqueService:
         return maior_codigo + 1
 
     def cadastrar_cliente(self, nome):
-        pass
+        codigo = self.gerar_proximo_codigo_cliente()
+        cliente = Cliente(codigo, nome)
+        self.clientes.inserir_fim(cliente)
+        self.salvar_clientes()
+        return cliente
 
     def listar_clientes(self):
-        pass
+        return self.clientes.listar()
 
     def buscar_cliente(self, codigo):
-        pass
+        return self.clientes.buscar(codigo)
+    
 
     def remover_cliente(self, codigo):
-        pass
-
+        cliente_removido = self.clientes.remover(codigo)
+        if cliente_removido:
+            self.salvar_clientes()
+        return cliente_removido
+    
     def cadastrar_produto(self, nome, preco, quantidade):
         pass
 

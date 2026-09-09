@@ -1,9 +1,15 @@
+
+import os
+
 from modulos.services.estoque_service import EstoqueService
 from modulos.recursos import (
     limpar_terminal,
     ler_texto_obrigatorio,
     mostrar_menu,
 )
+from modulos.models.cliente import Cliente
+from modulos.services.persistencia_service import PersistenciaService
+
 service = EstoqueService()
 
 while True:
@@ -11,26 +17,42 @@ while True:
     opcao = mostrar_menu()
 
     if opcao == '1': #Cadastrar cliente
-        nome = ler_texto_obrigatorio("Digite o nome do cliente: ")  
-        clientes.cadastrar(nome)
-        print(f"Cliente cadastrado com sucesso: {nome}")
+        nome = ler_texto_obrigatorio("Digite o nome do cliente: ")
+        cliente = service.cadastrar_cliente(nome)
+        print(f"Cliente cadastrado com sucesso: {cliente.nome} (Código: {cliente.codigo})")
 
     elif opcao == '2': #Listar clientes
-        print("Clientes cadastrados:")
-        clientes.listar_clientes()
+        clientes = service.listar_clientes()
+        if clientes:
+            print("Lista de clientes:")
+            for cliente in clientes:
+                print(f"Código: {cliente.codigo} | Nome: {cliente.nome}")
+        else:
+            print("Nenhum cliente cadastrado.")
 
     elif opcao == '3': #Buscar cliente
-        codigo = int(ler_texto_obrigatorio("Digite o código do cliente: "))
-        cliente = clientes.buscar_cliente(codigo)
-        if cliente:
-            print(f"Cliente encontrado: {cliente.nome}")
-        else:
-            print("Cliente não encontrado.")
+        try:
+            codigo = int(ler_texto_obrigatorio("Digite o código do cliente: "))
+            cliente = service.buscar_cliente(codigo)
+            if cliente:
+                print(f"Cliente encontrado: {cliente.nome} (Código: {cliente.codigo})")
+            else:
+                print("Cliente não encontrado.")
+
+        except ValueError:
+            print("Digite apenas números.")
 
     elif opcao == '4': #Remover cliente
-        codigo = int(ler_texto_obrigatorio("Digite o código do cliente para remover: "))
-        clientes.remover_cliente(codigo)
-        print("Cliente removido com sucesso.")
+        try:
+            codigo = int(ler_texto_obrigatorio("Digite o código do cliente a ser removido: "))
+            cliente_removido = service.remover_cliente(codigo)
+            if cliente_removido:
+                print(f"Cliente removido com sucesso: {cliente_removido.nome} (Código: {cliente_removido.codigo})")
+            else:
+                print("Cliente não encontrado.")
+
+        except ValueError:
+            print("Digite apenas números.")
 
     elif opcao == '5': #Cadastrar produto
         nome = ler_texto_obrigatorio("Digite o nome do produto: ")
@@ -166,7 +188,7 @@ while True:
                 estoque.produtos[operacao["nome"]] = operacao["quantidade"]
                 print(f"Remoção do produto '{operacao['nome']}' desfeita.")
             
-           # elif tipo == "venda":
+# elif tipo == "venda":
 
     elif opcao == '0': #Sair
         print("Saindo do programa...")
