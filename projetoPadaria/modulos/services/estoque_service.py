@@ -5,6 +5,8 @@ from modulos.estruturas.lde import LDE
 from modulos.estruturas.lse import LSE
 from modulos.services.persistencia_service import PersistenciaService
 from modulos.models.cliente import Cliente
+from modulos.models.produto import Produto
+from modulos.models.venda import Venda
 
 class EstoqueService:
     def __init__(self):
@@ -69,34 +71,85 @@ class EstoqueService:
         return cliente_removido
     
     def cadastrar_produto(self, nome, preco, quantidade):
-        pass
+        codigo = self.gerar_proximo_codigo_produto()
+        produto = Produto(codigo, nome, preco, quantidade)
+
+        self.produtos.inserir_fim(produto)
+        self.salvar_produtos()
+
+        return produto
 
     def listar_produtos(self):
-        pass
+        return self.produtos.listar()
 
     def listar_produtos_inverso(self):
-        pass
+        return self.produtos.listar_inverso()
 
     def listar_produtos_ordenados_por_id(self):
-        pass
+        produtos = self.produtos.listar()
+        produtos.sort(key=lambda produto: produto.codigo)
+        return produtos
 
     def buscar_produto(self, codigo):
-        pass
-
-    def buscar_produto_binario(self, codigo):
-        pass
+        return self.produtos.buscar(codigo)
 
     def atualizar_estoque(self, codigo, nova_quantidade):
-        pass
+        produto = self.produtos.buscar(codigo)
+
+        if produto is None:
+            return None
+
+        produto.atualizar_estoque(nova_quantidade)
+        self.salvar_produtos()
+
+        return produto
 
     def remover_produto(self, codigo):
-        pass
+        produto_removido = self.produtos.remover(codigo)
+
+        if produto_removido:
+            self.salvar_produtos()
+
+        return produto_removido
 
     def realizar_venda_exemplo(self, codigo_cliente, codigo_produto, quantidade):
-        pass
+        cliente = self.buscar_cliente(codigo_cliente)
+        produto = self.buscar_produto(codigo_produto)
+
+        if cliente is None:
+            return None
+
+        if produto is None:
+            return None
+
+        if produto.quantidade < quantidade:
+            return None
+
+        item = {
+            "codigo_produto": produto.codigo,
+            "quantidade": quantidade,
+            "preco_unitario": produto.preco
+        }
+
+        codigo_venda = self.gerar_proximo_codigo_venda()
+
+        venda = Venda(
+            codigo_venda,
+            codigo_cliente,
+            [item]
+        )
+
+        produto.quantidade -= quantidade
+
+        self.vendas.enqueue(venda)
+
+        self.salvar_produtos()
+        self.salvar_vendas()
+
+        return venda
 
     def listar_vendas(self):
-        pass
+        return self.vendas.listar()
 
     def primeira_venda(self):
         if self.vendas.is_empty():
