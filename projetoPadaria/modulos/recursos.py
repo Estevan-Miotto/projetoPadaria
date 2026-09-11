@@ -1,12 +1,5 @@
 import os
 
-def ler_texto_obrigatorio(mensagem):
-    while True:
-        texto = input(mensagem).strip()
-        if texto: 
-            return texto
-        print("Este campo é obrigatório.")
-
 def mostrar_menu():
     print("\n==============================")
     print("SISTEMA DE ESTOQUE E VENDAS")
@@ -33,7 +26,7 @@ def mostrar_menu():
     print("20 - Exibir produto mais vendido")
     print("21 - Desfazer ultima operacao")
     print("0 - Sair")
-    return input("Escolha uma opção: ") 
+    return input("Escolha uma opção: ")
 
 
 def limpar_terminal():
@@ -55,9 +48,14 @@ def ler_inteiro(mensagem):
 
 def ler_float(mensagem):
     valor = input(mensagem). replace(","".")
-    return float(valor)  
+    return float(valor)
 def pausar():
     input("\nPressione ENTER para continuar!")
 
-
+def ler_texto_obrigatorio(mensagem):
+    while True:
+        texto = input(mensagem).strip()
+        if texto:
+            return texto
+        print("Este campo é obrigatório.")
 

@@ -18,9 +18,7 @@ class PersistenciaService:
         self._garantir_csv(self.arquivo_clientes, ["codigo", "nome"])
         self._garantir_csv(self.arquivo_produtos, ["codigo", "nome", "preco", "quantidade"])
         self._garantir_csv(
-            self.arquivo_vendas,
-            ["codigo", "codigo_cliente", "itens", "valor_total"],
-        )
+            self.arquivo_vendas,["codigo", "codigo_cliente", "itens", "valor_total"],)
 
     def _garantir_csv(self, caminho, cabecalho):
         if os.path.exists(caminho) and os.path.getsize(caminho) > 0:
