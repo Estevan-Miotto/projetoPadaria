@@ -32,16 +32,6 @@ def mostrar_menu():
 def limpar_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def cadastrar_pedido(produto, quantidade):
-    return {'produto': produto, 'quantidade': quantidade}
-
-def listar_pedidos():
-    return [{"produtos":{"ovo": 100,"Pão": 50,"Leite": 20,"Farinha": 30,"Açúcar": 25}}]
-
-def listar_clientes(self):
-    for cliente in self.clientes.values():
-        print(f"ID: {cliente.id} | "f"Nome: {cliente.nome}")
-
 def ler_inteiro(mensagem):
     valor = input(mensagem)
     return int(valor)

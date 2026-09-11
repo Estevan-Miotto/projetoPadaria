@@ -7,6 +7,8 @@ from modulos.services.persistencia_service import PersistenciaService
 from modulos.models.cliente import Cliente
 from modulos.models.produto import Produto
 from modulos.models.venda import Venda
+from modulos.estruturas.pilha import Pilha
+
 
 class EstoqueService:
     def __init__(self):
@@ -16,6 +18,7 @@ class EstoqueService:
         self.clientes = LSE()
         self.produtos = LDE()
         self.vendas = Fila()
+        self.historico = Pilha()
         self.persistencia = PersistenciaService(pasta_data)
 
         self.carregar_dados()
@@ -55,6 +58,7 @@ class EstoqueService:
         cliente = Cliente(codigo, nome)
         self.clientes.inserir_fim(cliente)
         self.salvar_clientes()
+        self.historico.push({"tipo": "cadastro_cliente", "id": cliente.codigo, "nome": cliente.nome})
         return cliente
 
     def listar_clientes(self):
@@ -76,7 +80,7 @@ class EstoqueService:
 
         self.produtos.inserir_fim(produto)
         self.salvar_produtos()
-
+        self.historico.push({"tipo": "cadastro_produto", "id": produto.codigo, "nome": produto.nome, "preco": produto.preco, "quantidade": produto.quantidade})
         return produto
 
     def listar_produtos(self):
@@ -95,13 +99,12 @@ class EstoqueService:
 
     def atualizar_estoque(self, codigo, nova_quantidade):
         produto = self.produtos.buscar(codigo)
-
         if produto is None:
             return None
-
+        quantidade_anterior = produto.quantidade
         produto.atualizar_estoque(nova_quantidade)
         self.salvar_produtos()
-
+        self.historico.push({"tipo": "atualizacao_estoque", "id": produto.codigo, "quantidade_anterior": quantidade_anterior, "quantidade_nova": nova_quantidade})
         return produto
 
     def remover_produto(self, codigo):
@@ -109,7 +112,7 @@ class EstoqueService:
 
         if produto_removido:
             self.salvar_produtos()
-
+            self.historico.push({"tipo": "remocao_produto", "id": produto_removido.codigo, "nome": produto_removido.nome, "preco": produto_removido.preco, "quantidade": produto_removido.quantidade})
         return produto_removido
 
     def realizar_venda_exemplo(self, codigo_cliente, codigo_produto, quantidade):
@@ -197,10 +200,77 @@ class EstoqueService:
         return maior
 
     def produto_mais_vendido(self):
-        pass
+        if self.vendas.is_empty():
+            return None
+
+        quantidades_vendidas = {}
+
+        for venda in self.vendas.listar():
+            for item in venda.itens:
+                codigo = item["codigo_produto"]
+                quantidade = item["quantidade"]
+                quantidades_vendidas[codigo] = quantidades_vendidas.get(codigo, 0) + quantidade
+
+        if not quantidades_vendidas:
+            return None
+
+        codigo_mais_vendido = max(quantidades_vendidas, key=quantidades_vendidas.get)
+        produto = self.produtos.buscar(codigo_mais_vendido)
+
+        if produto is None:
+            return None
+
+        produto.quantidade_vendida = quantidades_vendidas[codigo_mais_vendido]
+        return produto
 
     def desfazer_ultima_operacao(self):
-        pass
+        if self.historico.is_empty():
+            return None
+
+        operacao = self.historico.pop()
+        tipo = operacao["tipo"]
+
+        if tipo == "cadastro_cliente":
+            cliente = self.clientes.remover(operacao["id"])
+
+            if cliente:
+                self.salvar_clientes()
+
+            return f"Cadastro do cliente '{operacao['nome']}' desfeito."
+
+        elif tipo == "cadastro_produto":
+            produto = self.produtos.remover(operacao["id"])
+
+            if produto:
+                self.salvar_produtos()
+
+            return f"Cadastro do produto '{operacao['nome']}' desfeito."
+
+        elif tipo == "atualizacao_estoque":
+            produto = self.produtos.buscar(operacao["id"])
+
+            if produto is None:
+                return None
+
+            produto.atualizar_estoque(operacao["quantidade_anterior"])
+            self.salvar_produtos()
+
+            return f"Atualização de estoque do produto '{produto.nome}' desfeita."
+
+        elif tipo == "remocao_produto":
+            produto = Produto(
+                operacao["id"],
+                operacao["nome"],
+                operacao["preco"],
+                operacao["quantidade"]
+            )
+
+            self.produtos.inserir_fim(produto)
+            self.salvar_produtos()
+
+            return f"Remoção do produto '{operacao['nome']}' desfeita."
+
+        return None
 
     def salvar_clientes(self):
         self.persistencia.salvar_clientes(self.clientes.listar())
@@ -210,3 +280,7 @@ class EstoqueService:
 
     def salvar_vendas(self):
         self.persistencia.salvar_vendas(self.vendas.listar())
+
+
+
+

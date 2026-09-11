@@ -1,29 +1,18 @@
 from modulos.recursos import ler_texto_obrigatorio, ler_float, ler_inteiro
-from modulos.models.produto import Produto
 from modulos.estruturas.busca_binaria import busca_binaria
 
-def cadastrar_produto(produtos, persistencia):
-
+def cadastrar_produto(service):
     nome = ler_texto_obrigatorio("Digite o nome do produto: ")
-
     preco = ler_float("Digite o preço do produto: ")
-
     quantidade = ler_inteiro("Digite a quantidade em estoque: ")
 
-    if produtos:
-        proximo_codigo = max(produto.codigo for produto in produtos) + 1
-    else:
-        proximo_codigo = 1
+    novo_produto = service.cadastrar_produto(nome, preco, quantidade)
 
-    novo_produto = Produto(proximo_codigo,nome,preco,quantidade)
+    print(f"Produto cadastrado com sucesso: {novo_produto.nome} - Código: {novo_produto.codigo}")
 
-    produtos.append(novo_produto)
+def listar_produtos(service):
+    produtos = service.listar_produtos()
 
-    persistencia.salvar_produtos(produtos)
-
-    print(f"Produto cadastrado com sucesso: "f"{novo_produto.nome} - "f"Código: {novo_produto.codigo}")
-
-def listar_produtos(produtos):
     print("Lista de produtos:")
 
     if not produtos:
@@ -33,21 +22,19 @@ def listar_produtos(produtos):
     for produto in produtos:
         print(f"Código: {produto.codigo} | Nome: {produto.nome} | Preço: R$ {produto.preco:.2f} | Quantidade: {produto.quantidade}")
 
-def buscar_produto(produtos):
+def buscar_produto(service):
     try:
-        codigo = int(ler_texto_obrigatorio("Digite o código do produto: "))
+        codigo = ler_inteiro("Digite o código do produto: ")
+        produto = service.buscar_produto(codigo)
 
-        for produto in produtos:
-            if produto.codigo == codigo:
-                print(f"Produto encontrado: {produto.nome}")
-                return
-
-        print("Produto não encontrado.")
-
+        if produto:
+            print(f"Produto encontrado: {produto.nome}")
+        else:
+            print("Produto não encontrado.")
     except ValueError:
         print("Digite apenas números.")
 
-def atualizar_estoque(produtos, service):
+def atualizar_estoque(service):
 
     try:
         codigo = ler_inteiro("Digite o código do produto: ")
@@ -63,24 +50,15 @@ def atualizar_estoque(produtos, service):
     except ValueError:
         print("Digite apenas números.")
 
-def remover_produto(produtos, persistencia):
+def remover_produto(service):
     try:
         codigo = ler_inteiro("Digite o código do produto: ")
-
-        produto = None
-
-        for item in produtos:
-            if item.codigo == codigo:
-                produto = item
-                break
+        produto = service.remover_produto(codigo)
 
         if produto:
-            produtos.remove(produto)
-            persistencia.salvar_produtos(produtos)
             print(f"Produto {produto.nome} removido com sucesso.")
         else:
             print("Produto não encontrado.")
-
     except ValueError:
         print("Digite apenas números.")
 
@@ -108,10 +86,10 @@ def listar_produtos_ordenados_por_id(service):
     for produto in produtos:
         print(f"Código: {produto.codigo} | Nome: {produto.nome} | Preço: R$ {produto.preco:.2f} | Quantidade: {produto.quantidade}")
 
-def buscar_produto_binario(produtos):
+def buscar_produto_binario(service):
     try:
         codigo = ler_inteiro("Digite o código do produto: ")
-
+        produtos = service.listar_produtos()
         produtos_ordenados = sorted(produtos, key=lambda produto: produto.codigo)
         produto = busca_binaria(produtos_ordenados, codigo)
 
@@ -119,11 +97,10 @@ def buscar_produto_binario(produtos):
             print(f"Produto encontrado: {produto.nome}")
         else:
             print("Produto não encontrado.")
-
     except ValueError:
         print("Digite apenas números.")
 
-def realizar_venda(produtos, service):
+def realizar_venda(service):
     try:
         codigo_cliente = ler_inteiro("Digite o código do cliente: ")
         codigo_produto = ler_inteiro("Digite o código do produto: ")
@@ -138,19 +115,61 @@ def realizar_venda(produtos, service):
     except ValueError:
         print("Digite apenas números.")
 
+def listar_vendas(service):
+    vendas = service.listar_vendas()
 
+    if not vendas:
+        print("Nenhuma venda registrada.")
+        return
 
+    print("Fila de vendas:")
 
+    for venda in vendas:
+        print(f"Código da venda: {venda.codigo} | Cliente: {venda.codigo_cliente} | Valor total: R$ {venda.valor_total:.2f}")
 
+def primeira_venda(service):
+    venda = service.primeira_venda()
 
+    if venda:
+        print(venda)
+    else:
+        print("Não há vendas na fila.")
 
+def valor_total_estoque(service):
+    total = service.valor_total_estoque()
+    print(f"Valor total do estoque: R$ {total:.2f}")
 
+def valor_total_vendas(service):
+    total = service.valor_total_vendas()
+    print(f"Valor total das vendas: R$ {total:.2f}")
 
+def clientes_e_valores_totais_gastos(service):
+    totais = service.clientes_e_valores_totais_gastos()
 
+    print("Clientes e valores totais gastos:")
 
+    if len(totais) == 0:
+        print("Nenhuma venda registrada!!")
+        return
 
+    for item in totais:
+        print(f"Cliente: {item['nome']} | Total gasto: R$ {item['total_gasto']:.2f}")
 
+def cliente_que_mais_gastou(service):
+    maior = service.cliente_que_mais_gastou()
 
+    if maior is None:
+        print("Nenhuma venda registrada ainda.")
+    else:
+        print(f"Cliente que mais gastou: {maior['nome']} - Total: R$ {maior['total_gasto']:.2f}")
+
+def produto_mais_vendido(service):
+    produto = service.produto_mais_vendido()
+
+    if produto:
+        print(f"Produto mais vendido: {produto.nome} - Quantidade vendida: {produto.quantidade_vendida}")
+    else:
+        print("Nenhum produto vendido ainda.")
 
 
 

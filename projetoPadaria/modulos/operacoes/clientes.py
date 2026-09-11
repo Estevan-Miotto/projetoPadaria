@@ -2,23 +2,16 @@ from modulos.recursos import ler_texto_obrigatorio
 from modulos.models.cliente import Cliente
 
 
-def cadastrar_cliente(clientes, persistencia):
+def cadastrar_cliente(service):
     nome = ler_texto_obrigatorio("Digite o nome do cliente: ")
+    novo_cliente = service.cadastrar_cliente(nome)
 
-    if clientes:
-        proximo_codigo = max(cliente.codigo for cliente in clientes) + 1
-    else:
-        proximo_codigo = 1
+    print(f"Cliente cadastrado com sucesso: {novo_cliente.nome} - Código: {novo_cliente.codigo}")
 
-    novo_cliente = Cliente(proximo_codigo, nome)
 
-    clientes.append(novo_cliente)
+def listar_clientes(service):
+    clientes = service.listar_clientes()
 
-    persistencia.salvar_clientes(clientes)
-
-    print(f"Cliente cadastrado com sucesso: "f"{novo_cliente.nome} - "f"Código: {novo_cliente.codigo}")
-
-def listar_clientes(clientes):
     print("Lista de clientes:")
 
     if not clientes:
@@ -26,43 +19,32 @@ def listar_clientes(clientes):
         return
 
     for cliente in clientes:
-        print(f"Código: {cliente.codigo} | "f"Nome: {cliente.nome}")
+        print(f"Código: {cliente.codigo} | Nome: {cliente.nome}")
 
-def buscar_cliente(clientes):
+
+def buscar_cliente(service):
     try:
-        codigo = int(
-            ler_texto_obrigatorio("Digite o código do cliente: ")
-        )
+        codigo = int(ler_texto_obrigatorio("Digite o código do cliente: "))
+        cliente = service.buscar_cliente(codigo)
 
-        for cliente in clientes:
-            if cliente.codigo == codigo:
-                print(f"Cliente encontrado: "f"{cliente.nome}")
-                return
-
-        print("Cliente não encontrado.")
+        if cliente:
+            print(f"Cliente encontrado: {cliente.nome}")
+        else:
+            print("Cliente não encontrado.")
 
     except ValueError:
         print("Digite apenas números.")
 
-def remover_cliente(clientes, persistencia):
+
+def remover_cliente(service):
     try:
-        codigo = int(
-            ler_texto_obrigatorio(
-                "Digite o código do cliente: "
-            )
-        )
+        codigo = int(ler_texto_obrigatorio("Digite o código do cliente: "))
+        cliente = service.remover_cliente(codigo)
 
-        for cliente in clientes:
-            if cliente.codigo == codigo:
-                clientes.remove(cliente)
-                persistencia.salvar_clientes(clientes)
-
-                print(
-                    f"Cliente {cliente.nome} removido com sucesso."
-                )
-                return
-
-        print("Cliente não encontrado.")
+        if cliente:
+            print(f"Cliente {cliente.nome} removido com sucesso.")
+        else:
+            print("Cliente não encontrado.")
 
     except ValueError:
         print("Digite apenas números.")
