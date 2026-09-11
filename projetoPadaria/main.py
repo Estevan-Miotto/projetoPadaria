@@ -1,6 +1,7 @@
 
 import os
 
+from modulos.operacoes.clientes import cadastrar_cliente, listar_clientes, buscar_cliente, remover_cliente
 from modulos.services.estoque_service import EstoqueService
 from modulos.recursos import (
     limpar_terminal,
@@ -10,49 +11,28 @@ from modulos.recursos import (
 from modulos.models.cliente import Cliente
 from modulos.services.persistencia_service import PersistenciaService
 
+pasta_data = os.path.join(
+    os.path.dirname(__file__),"modulos","data")
+
+persistencia = PersistenciaService(pasta_data)
 service = EstoqueService()
+clientes = persistencia.carregar_clientes()
 
 while True:
     limpar_terminal()
     opcao = mostrar_menu()
 
-    if opcao == '1': #Cadastrar cliente
-        nome = ler_texto_obrigatorio("Digite o nome do cliente: ")
-        cliente = service.cadastrar_cliente(nome)
-        print(f"Cliente cadastrado com sucesso: {cliente.nome} (Código: {cliente.codigo})")
+    if opcao == "1":#Cadastrar cliente
+        cadastrar_cliente(clientes, persistencia)
 
-    elif opcao == '2': #Listar clientes
-        clientes = service.listar_clientes()
-        if clientes:
-            print("Lista de clientes:")
-            for cliente in clientes:
-                print(f"Código: {cliente.codigo} | Nome: {cliente.nome}")
-        else:
-            print("Nenhum cliente cadastrado.")
+    elif opcao == "2":
+        listar_clientes(clientes)
 
-    elif opcao == '3': #Buscar cliente
-        try:
-            codigo = int(ler_texto_obrigatorio("Digite o código do cliente: "))
-            cliente = service.buscar_cliente(codigo)
-            if cliente:
-                print(f"Cliente encontrado: {cliente.nome} (Código: {cliente.codigo})")
-            else:
-                print("Cliente não encontrado.")
+    elif opcao == "3":
+        buscar_cliente(clientes)
 
-        except ValueError:
-            print("Digite apenas números.")
-
-    elif opcao == '4': #Remover cliente
-        try:
-            codigo = int(ler_texto_obrigatorio("Digite o código do cliente a ser removido: "))
-            cliente_removido = service.remover_cliente(codigo)
-            if cliente_removido:
-                print(f"Cliente removido com sucesso: {cliente_removido.nome} (Código: {cliente_removido.codigo})")
-            else:
-                print("Cliente não encontrado.")
-
-        except ValueError:
-            print("Digite apenas números.")
+    elif opcao == "4":
+        remover_cliente(clientes, persistencia)
 
     elif opcao == '5': #Cadastrar produto
         nome = ler_texto_obrigatorio("Digite o nome do produto: ")
@@ -139,13 +119,13 @@ while True:
         if len(totais) == 0:
             print("Nenhuma venda registrada!!")
 
-        else: 
+        else:
             for item in totais:
                 print(f"Cliente:{item['nome']} | Total gasto: R${item[' total_gasto']:.2f}")
 
     elif opcao == '19': #cliente que mais gastou 
         maior = service.cliente_que_mais_gastou()
-        if maior is None: 
+        if maior is None:
             print(" Nenhuma venda registrada ainda. ")
         else:
             print(f"Cliente que mais gastou: {maior['nome']} - total: R${maior['total_gasto']:.2f}")

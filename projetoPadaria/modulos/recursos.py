@@ -59,3 +59,6 @@ def ler_texto_obrigatorio(mensagem):
             return texto
         print("Este campo é obrigatório.")
 
+
+
+
