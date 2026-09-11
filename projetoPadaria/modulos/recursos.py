@@ -47,7 +47,7 @@ def ler_inteiro(mensagem):
     return int(valor)
 
 def ler_float(mensagem):
-    valor = input(mensagem). replace(","".")
+    valor = input(mensagem).replace(",", ".")
     return float(valor)
 def pausar():
     input("\nPressione ENTER para continuar!")

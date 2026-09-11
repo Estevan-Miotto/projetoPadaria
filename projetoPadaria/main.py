@@ -2,12 +2,21 @@
 import os
 
 from modulos.operacoes.clientes import cadastrar_cliente, listar_clientes, buscar_cliente, remover_cliente
+
+from modulos.operacoes.produtos import (
+    cadastrar_produto,
+    listar_produtos, buscar_produto,
+    atualizar_estoque, remover_produto,
+    listar_produtos_inverso,
+    listar_produtos_ordenados_por_id,
+    buscar_produto_binario,
+    realizar_venda)
+
 from modulos.services.estoque_service import EstoqueService
 from modulos.recursos import (
     limpar_terminal,
     ler_texto_obrigatorio,
-    mostrar_menu,
-)
+    mostrar_menu)
 from modulos.models.cliente import Cliente
 from modulos.services.persistencia_service import PersistenciaService
 
@@ -17,6 +26,7 @@ pasta_data = os.path.join(
 persistencia = PersistenciaService(pasta_data)
 service = EstoqueService()
 clientes = persistencia.carregar_clientes()
+produtos = persistencia.carregar_produtos()
 
 while True:
     limpar_terminal()
@@ -34,66 +44,36 @@ while True:
     elif opcao == "4":
         remover_cliente(clientes, persistencia)
 
-    elif opcao == '5': #Cadastrar produto
-        nome = ler_texto_obrigatorio("Digite o nome do produto: ")
-        preco = float(ler_texto_obrigatorio("Digite o preço do produto: "))
-        quantidade = int(ler_texto_obrigatorio("Digite a quantidade do produto: "))
-        estoque.cadastrar_produto(nome, preco, quantidade)
-        print(f"Produto cadastrado com sucesso: {nome} - Preço: {preco} - Quantidade: {quantidade}")
+    elif opcao == "5":
+        cadastrar_produto(produtos, persistencia)
 
-    elif opcao == '6': #Listar produtos
-        print("Estoque atual:")
-        estoque.listar_produtos()
+    elif opcao == "6":
+        listar_produtos(produtos)
 
-    elif opcao == '7': #Buscar produto
-        codigo = int(ler_texto_obrigatorio("Digite o código do produto: "))
-        produto = estoque.buscar_produto(codigo)
-        if produto:
-            print(f"Produto encontrado: {produto.nome} - Preço: {produto.preco} - Quantidade: {produto.quantidade}")
-        else:
-            print("Produto não encontrado.")
+    elif opcao == "7":
+        buscar_produto(produtos)
 
-    elif opcao == '8': #Atualizar estoque
-        codigo = int(ler_texto_obrigatorio("Digite o código do produto: "))
-        nova_quantidade = int(ler_texto_obrigatorio("Digite a nova quantidade: "))
-        estoque.atualizar_estoque(codigo, nova_quantidade)
-        print("Estoque atualizado com sucesso.")
+    elif opcao == "8":
+        atualizar_estoque(produtos, service)
 
-    elif opcao == '9': #Remover produto
-        codigo = int(ler_texto_obrigatorio("Digite o código do produto: "))
-        estoque.remover_produto(codigo)
-        print("Produto removido com sucesso.")
+    elif opcao == "9":
+        remover_produto(produtos, persistencia)
 
-    elif opcao == '10': #Listar produtos em ordem inversa
-        print("Produtos em ordem inversa:")
-        produtos_inverso = estoque.listar_produtos_inverso()
-        for produto in produtos_inverso:
-            print(f"ID: {produto.codigo} | Nome: {produto.nome} | Preço: {produto.preco} | Quantidade: {produto.quantidade}")
+    elif opcao == "10":
+        listar_produtos_inverso(service)
 
-    elif opcao == '11': #Listar produtos ordenados por ID
-        print("Produtos ordenados por ID:")
-        produtos_ordenados = estoque.listar_produtos_ordenados_por_id()
-        for produto in produtos_ordenados:
-            print(f"ID: {produto.codigo} | Nome: {produto.nome} | Preço: {produto.preco} | Quantidade: {produto.quantidade}")
+    elif opcao == "11":
+        listar_produtos_ordenados_por_id(service)
 
-    elif opcao == '12': #Buscar produto por ID usando Busca Binaria
-        codigo = int(ler_texto_obrigatorio("Digite o código do produto: "))
-        produto = estoque.buscar_produto_binario(codigo)
-        if produto:
-            print(f"Produto encontrado: {produto.nome} - Preço: {produto.preco} - Quantidade: {produto.quantidade}")
-        else:
-            print("Produto não encontrado.")
+    elif opcao == "12":
+        buscar_produto_binario(produtos)
 
-    elif opcao == '13': #Realizar venda
-        codigo_cliente = int(ler_texto_obrigatorio("Digite o código do cliente: "))
-        codigo_produto = int(ler_texto_obrigatorio("Digite o código do produto: "))
-        quantidade = int(ler_texto_obrigatorio("Digite a quantidade: "))
-        estoque.realizar_venda_exemplo(codigo_cliente, codigo_produto, quantidade)
-        print("Venda realizada com sucesso.")
+    elif opcao == '13':
+        realizar_venda(produtos, service)
 
     elif opcao == '14': #Listar vendas
         print("Fila de vendas:")
-        vendas = estoque.listar_vendas()
+        vendas = service.listar_vendas()
         for venda in vendas:
             print(f"Cliente: {venda['cliente'].nome} | Produto: {venda['produto'].nome} | Quantidade: {venda['quantidade']}")
 
